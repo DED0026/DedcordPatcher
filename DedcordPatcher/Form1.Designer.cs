@@ -30,19 +30,18 @@
         {
             this.DMTab = new System.Windows.Forms.TabPage();
             this.DVTab = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.GitClone = new System.Windows.Forms.Button();
+            this.ClientDetector = new System.Windows.Forms.Label();
+            this.RepoLink = new System.Windows.Forms.TextBox();
             this.AppTabs = new System.Windows.Forms.TabControl();
-            this.VCInstall = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.Logtab = new System.Windows.Forms.TabPage();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.Logbox = new System.Windows.Forms.RichTextBox();
+            this.LaunchInstaller = new System.Windows.Forms.Button();
+            this.RebuildAndRestart = new System.Windows.Forms.Button();
+            this.RebuildClient = new System.Windows.Forms.Button();
+            this.InstallPackages = new System.Windows.Forms.Button();
             this.DVTab.SuspendLayout();
             this.AppTabs.SuspendLayout();
-            this.VCInstall.SuspendLayout();
             this.Logtab.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,30 +57,56 @@
             // 
             // DVTab
             // 
-            this.DVTab.Controls.Add(this.button1);
-            this.DVTab.Controls.Add(this.label1);
-            this.DVTab.Controls.Add(this.textBox1);
+            this.DVTab.Controls.Add(this.LaunchInstaller);
+            this.DVTab.Controls.Add(this.RebuildAndRestart);
+            this.DVTab.Controls.Add(this.RebuildClient);
+            this.DVTab.Controls.Add(this.InstallPackages);
+            this.DVTab.Controls.Add(this.GitClone);
+            this.DVTab.Controls.Add(this.ClientDetector);
+            this.DVTab.Controls.Add(this.RepoLink);
             this.DVTab.Location = new System.Drawing.Point(4, 25);
             this.DVTab.Name = "DVTab";
             this.DVTab.Padding = new System.Windows.Forms.Padding(3);
             this.DVTab.Size = new System.Drawing.Size(792, 421);
             this.DVTab.TabIndex = 0;
-            this.DVTab.Text = "Download Vencord";
+            this.DVTab.Text = "Client manager";
             this.DVTab.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // GitClone
             // 
-            this.textBox1.Location = new System.Drawing.Point(8, 6);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(247, 22);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "https://github.com/Vendicated/Vencord";
+            this.GitClone.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.GitClone.Location = new System.Drawing.Point(464, 99);
+            this.GitClone.Name = "GitClone";
+            this.GitClone.Size = new System.Drawing.Size(75, 23);
+            this.GitClone.TabIndex = 2;
+            this.GitClone.Text = "Git clone";
+            this.GitClone.UseVisualStyleBackColor = true;
+            this.GitClone.Click += new System.EventHandler(this.GitClone_Click);
+            // 
+            // ClientDetector
+            // 
+            this.ClientDetector.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ClientDetector.AutoSize = true;
+            this.ClientDetector.Location = new System.Drawing.Point(545, 103);
+            this.ClientDetector.Name = "ClientDetector";
+            this.ClientDetector.Size = new System.Drawing.Size(43, 16);
+            this.ClientDetector.TabIndex = 1;
+            this.ClientDetector.Text = "Client:";
+            // 
+            // RepoLink
+            // 
+            this.RepoLink.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.RepoLink.Location = new System.Drawing.Point(211, 100);
+            this.RepoLink.Name = "RepoLink";
+            this.RepoLink.Size = new System.Drawing.Size(247, 22);
+            this.RepoLink.TabIndex = 0;
+            this.RepoLink.Text = "https://github.com/Vendicated/Vencord";
+            this.RepoLink.TextChanged += new System.EventHandler(this.RepoLink_TextChanged);
             // 
             // AppTabs
             // 
             this.AppTabs.Controls.Add(this.DVTab);
             this.AppTabs.Controls.Add(this.DMTab);
-            this.AppTabs.Controls.Add(this.VCInstall);
             this.AppTabs.Controls.Add(this.Logtab);
             this.AppTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AppTabs.Location = new System.Drawing.Point(0, 0);
@@ -90,66 +115,9 @@
             this.AppTabs.Size = new System.Drawing.Size(800, 450);
             this.AppTabs.TabIndex = 1;
             // 
-            // VCInstall
-            // 
-            this.VCInstall.Controls.Add(this.button4);
-            this.VCInstall.Controls.Add(this.button3);
-            this.VCInstall.Controls.Add(this.button2);
-            this.VCInstall.Location = new System.Drawing.Point(4, 25);
-            this.VCInstall.Name = "VCInstall";
-            this.VCInstall.Size = new System.Drawing.Size(792, 421);
-            this.VCInstall.TabIndex = 2;
-            this.VCInstall.Text = "Install and Rebuild Vencord";
-            this.VCInstall.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 31);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 16);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Client: found";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(261, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Git clone";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(122, 253);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(212, 253);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "button2";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(95, 296);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(174, 23);
-            this.button4.TabIndex = 0;
-            this.button4.Text = "Launch Vencord installer";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
             // Logtab
             // 
-            this.Logtab.Controls.Add(this.richTextBox1);
+            this.Logtab.Controls.Add(this.Logbox);
             this.Logtab.Location = new System.Drawing.Point(4, 25);
             this.Logtab.Name = "Logtab";
             this.Logtab.Padding = new System.Windows.Forms.Padding(3);
@@ -158,13 +126,59 @@
             this.Logtab.Text = "Log";
             this.Logtab.UseVisualStyleBackColor = true;
             // 
-            // richTextBox1
+            // Logbox
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(127, 66);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(100, 96);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.Logbox.BackColor = System.Drawing.Color.Black;
+            this.Logbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Logbox.ForeColor = System.Drawing.Color.Lime;
+            this.Logbox.Location = new System.Drawing.Point(3, 3);
+            this.Logbox.Name = "Logbox";
+            this.Logbox.Size = new System.Drawing.Size(786, 415);
+            this.Logbox.TabIndex = 0;
+            this.Logbox.Text = "Welcome To DedcordPatcher.";
+            // 
+            // LaunchInstaller
+            // 
+            this.LaunchInstaller.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LaunchInstaller.Location = new System.Drawing.Point(305, 251);
+            this.LaunchInstaller.Name = "LaunchInstaller";
+            this.LaunchInstaller.Size = new System.Drawing.Size(174, 23);
+            this.LaunchInstaller.TabIndex = 3;
+            this.LaunchInstaller.Text = "Launch installer";
+            this.LaunchInstaller.UseVisualStyleBackColor = true;
+            this.LaunchInstaller.Click += new System.EventHandler(this.LaunchInstaller_Click);
+            // 
+            // RebuildAndRestart
+            // 
+            this.RebuildAndRestart.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.RebuildAndRestart.Location = new System.Drawing.Point(305, 222);
+            this.RebuildAndRestart.Name = "RebuildAndRestart";
+            this.RebuildAndRestart.Size = new System.Drawing.Size(174, 23);
+            this.RebuildAndRestart.TabIndex = 4;
+            this.RebuildAndRestart.Text = "Rebuild and Restart";
+            this.RebuildAndRestart.UseVisualStyleBackColor = true;
+            // 
+            // RebuildClient
+            // 
+            this.RebuildClient.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.RebuildClient.Location = new System.Drawing.Point(305, 193);
+            this.RebuildClient.Name = "RebuildClient";
+            this.RebuildClient.Size = new System.Drawing.Size(174, 23);
+            this.RebuildClient.TabIndex = 5;
+            this.RebuildClient.Text = "Rebuild";
+            this.RebuildClient.UseVisualStyleBackColor = true;
+            this.RebuildClient.Click += new System.EventHandler(this.RebuildClient_Click);
+            // 
+            // InstallPackages
+            // 
+            this.InstallPackages.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.InstallPackages.Location = new System.Drawing.Point(305, 164);
+            this.InstallPackages.Name = "InstallPackages";
+            this.InstallPackages.Size = new System.Drawing.Size(174, 23);
+            this.InstallPackages.TabIndex = 6;
+            this.InstallPackages.Text = "Install packages";
+            this.InstallPackages.UseVisualStyleBackColor = true;
+            this.InstallPackages.Click += new System.EventHandler(this.InstallPackages_Click);
             // 
             // Form1
             // 
@@ -174,10 +188,10 @@
             this.Controls.Add(this.AppTabs);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.DVTab.ResumeLayout(false);
             this.DVTab.PerformLayout();
             this.AppTabs.ResumeLayout(false);
-            this.VCInstall.ResumeLayout(false);
             this.Logtab.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -187,16 +201,16 @@
 
         private System.Windows.Forms.TabPage DMTab;
         private System.Windows.Forms.TabPage DVTab;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox RepoLink;
         private System.Windows.Forms.TabControl AppTabs;
-        private System.Windows.Forms.TabPage VCInstall;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label ClientDetector;
+        private System.Windows.Forms.Button GitClone;
         private System.Windows.Forms.TabPage Logtab;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox Logbox;
+        private System.Windows.Forms.Button LaunchInstaller;
+        private System.Windows.Forms.Button RebuildAndRestart;
+        private System.Windows.Forms.Button RebuildClient;
+        private System.Windows.Forms.Button InstallPackages;
     }
 }
 
