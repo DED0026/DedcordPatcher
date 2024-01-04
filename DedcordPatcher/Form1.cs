@@ -42,7 +42,7 @@ namespace DedcordPatcher
             process.StartInfo.CreateNoWindow = true;
             process.Start();
             process.BeginOutputReadLine();
-            //process.BeginErrorReadLine();
+            process.BeginErrorReadLine();
             cmd = process.StandardInput;
             process.WaitForExit();
             process.OutputDataReceived -= output;
@@ -134,24 +134,76 @@ namespace DedcordPatcher
 
         string[] namelist;
         string[] downloadlist;
-
+        bool respond;
         WebClient Wc = new WebClient();
         private void FetchPluh()
         {
+            if (!Directory.Exists(ClientFolder + "\\src\\userplugins"))
+                Directory.CreateDirectory(ClientFolder + "\\src\\userplugins");
             string RawPluginString = Wc.DownloadString(Pluginlistlink.Text).Replace("Âµ", "µ");
             string[] RawPluginList = RawPluginString.Split('\n');
             namelist = RawPluginList[0].Split('µ');
             downloadlist = RawPluginList[1].Split('µ');
             PluginList.Items.Clear();
+            respond = false;
             foreach (string plugin in namelist)
             {
                 PluginList.Items.Add(plugin);
+                string download = downloadlist[PluginList.Items.Count -1];
+                string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
+
+                if (Directory.Exists(ClientFolder + "\\src\\userplugins\\" + foldername))
+                {
+                    PluginList.SetItemChecked(PluginList.Items.Count - 1, true);
+                }
             }
+            respond = true;
+        }
+
+        private void PluginList_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (respond)
+            {
+                string download = downloadlist[PluginList.SelectedIndex];
+                string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
+                if (e.NewValue == CheckState.Checked)
+                {
+                    cmd.WriteLine("cd " + ClientFolder + "\\src\\userplugins");
+                    cmd.WriteLine("git clone " + download);
+                    //MessageBox.Show(foldername + "\n" + (string)PluginList.SelectedItem + "\n" + downloadlist[PluginList.SelectedIndex]);
+                }
+                else
+                {
+                    cmd.WriteLine("cd " + ClientFolder + "\\src\\userplugins");
+                    cmd.WriteLine("rd /s /q " + ClientFolder + "\\src\\userplugins\\" + foldername);
+                }
+            }
+        }
+
+        private void RebuildAndRestart_Click(object sender, EventArgs e)
+        {
+            RebuildClient.PerformClick();
+            if (Discord.Checked)
+                Functions.KillProcess("Discord");
+            if (DiscordPTB.Checked)
+                Functions.KillProcess("DiscordPTB");
+            if (DiscordCanary.Checked)
+                Functions.KillProcess("DiscordCanary");
         }
     }
 
     class Functions
     {
+        public static void KillProcess(string processName)
+        {
+            Process[] processes = Process.GetProcessesByName(processName);
+            foreach (Process process in processes)
+            {
+                process.Kill();
+            }
+        }
+
+
         public static string GetLastDirectoryName(string path)
         {
             string[] pathParts = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);

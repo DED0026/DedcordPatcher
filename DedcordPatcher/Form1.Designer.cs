@@ -44,6 +44,10 @@
             this.AppTabs = new System.Windows.Forms.TabControl();
             this.Logtab = new System.Windows.Forms.TabPage();
             this.Logbox = new System.Windows.Forms.RichTextBox();
+            this.Discord = new System.Windows.Forms.CheckBox();
+            this.DiscordPTB = new System.Windows.Forms.CheckBox();
+            this.DiscordCanary = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.DMTab.SuspendLayout();
             this.DVTab.SuspendLayout();
             this.AppTabs.SuspendLayout();
@@ -88,9 +92,14 @@
             this.PluginList.Name = "PluginList";
             this.PluginList.Size = new System.Drawing.Size(384, 361);
             this.PluginList.TabIndex = 0;
+            this.PluginList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.PluginList_ItemCheck);
             // 
             // DVTab
             // 
+            this.DVTab.Controls.Add(this.label1);
+            this.DVTab.Controls.Add(this.DiscordCanary);
+            this.DVTab.Controls.Add(this.DiscordPTB);
+            this.DVTab.Controls.Add(this.Discord);
             this.DVTab.Controls.Add(this.LaunchInstaller);
             this.DVTab.Controls.Add(this.RebuildAndRestart);
             this.DVTab.Controls.Add(this.RebuildClient);
@@ -109,7 +118,7 @@
             // LaunchInstaller
             // 
             this.LaunchInstaller.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.LaunchInstaller.Location = new System.Drawing.Point(305, 251);
+            this.LaunchInstaller.Location = new System.Drawing.Point(309, 341);
             this.LaunchInstaller.Name = "LaunchInstaller";
             this.LaunchInstaller.Size = new System.Drawing.Size(174, 23);
             this.LaunchInstaller.TabIndex = 3;
@@ -120,17 +129,18 @@
             // RebuildAndRestart
             // 
             this.RebuildAndRestart.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.RebuildAndRestart.Location = new System.Drawing.Point(305, 222);
+            this.RebuildAndRestart.Location = new System.Drawing.Point(309, 312);
             this.RebuildAndRestart.Name = "RebuildAndRestart";
             this.RebuildAndRestart.Size = new System.Drawing.Size(174, 23);
             this.RebuildAndRestart.TabIndex = 4;
             this.RebuildAndRestart.Text = "Rebuild and Restart";
             this.RebuildAndRestart.UseVisualStyleBackColor = true;
+            this.RebuildAndRestart.Click += new System.EventHandler(this.RebuildAndRestart_Click);
             // 
             // RebuildClient
             // 
             this.RebuildClient.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.RebuildClient.Location = new System.Drawing.Point(305, 193);
+            this.RebuildClient.Location = new System.Drawing.Point(309, 183);
             this.RebuildClient.Name = "RebuildClient";
             this.RebuildClient.Size = new System.Drawing.Size(174, 23);
             this.RebuildClient.TabIndex = 5;
@@ -141,7 +151,7 @@
             // InstallPackages
             // 
             this.InstallPackages.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.InstallPackages.Location = new System.Drawing.Point(305, 164);
+            this.InstallPackages.Location = new System.Drawing.Point(309, 154);
             this.InstallPackages.Name = "InstallPackages";
             this.InstallPackages.Size = new System.Drawing.Size(174, 23);
             this.InstallPackages.TabIndex = 6;
@@ -216,6 +226,55 @@
             this.Logbox.Text = resources.GetString("Logbox.Text");
             this.Logbox.TextChanged += new System.EventHandler(this.Logbox_TextChanged);
             // 
+            // Discord
+            // 
+            this.Discord.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.Discord.AutoSize = true;
+            this.Discord.Checked = true;
+            this.Discord.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Discord.Location = new System.Drawing.Point(358, 236);
+            this.Discord.Name = "Discord";
+            this.Discord.Size = new System.Drawing.Size(76, 20);
+            this.Discord.TabIndex = 7;
+            this.Discord.Text = "Discord";
+            this.Discord.UseVisualStyleBackColor = true;
+            // 
+            // DiscordPTB
+            // 
+            this.DiscordPTB.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.DiscordPTB.AutoSize = true;
+            this.DiscordPTB.Checked = true;
+            this.DiscordPTB.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DiscordPTB.Location = new System.Drawing.Point(345, 262);
+            this.DiscordPTB.Name = "DiscordPTB";
+            this.DiscordPTB.Size = new System.Drawing.Size(103, 20);
+            this.DiscordPTB.TabIndex = 7;
+            this.DiscordPTB.Text = "DiscordPTB";
+            this.DiscordPTB.UseVisualStyleBackColor = true;
+            // 
+            // DiscordCanary
+            // 
+            this.DiscordCanary.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.DiscordCanary.AutoSize = true;
+            this.DiscordCanary.Checked = true;
+            this.DiscordCanary.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DiscordCanary.Location = new System.Drawing.Point(337, 288);
+            this.DiscordCanary.Name = "DiscordCanary";
+            this.DiscordCanary.Size = new System.Drawing.Size(119, 20);
+            this.DiscordCanary.TabIndex = 7;
+            this.DiscordCanary.Text = "DiscordCanary";
+            this.DiscordCanary.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(371, 214);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 16);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Restart:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -252,6 +311,10 @@
         private System.Windows.Forms.CheckedListBox PluginList;
         private System.Windows.Forms.Button PluginsFetch;
         private System.Windows.Forms.TextBox Pluginlistlink;
+        private System.Windows.Forms.CheckBox DiscordCanary;
+        private System.Windows.Forms.CheckBox DiscordPTB;
+        private System.Windows.Forms.CheckBox Discord;
+        private System.Windows.Forms.Label label1;
     }
 }
 
