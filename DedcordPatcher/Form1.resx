@@ -117,4 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Logbox.Text" xml:space="preserve">
+    <value>Welcome To DedcordPatcher.
+A tool to automate the search and installation of custom Vencord plugins.
+
+Requirements:
+
+Git for windows
+Node 17+
+pnpm
+
+Starting:
+1. Download the client (Git clone at client manager)
+2. Download the node packages (Download packages button)
+3. Download your desired plugins.
+4. Rebuild client (Rebuild button)
+5. Launch installer button.
+
+Downloading more plugins after installing is as simple as rebuilding and restarting Dscord.
+</value>
+  </data>
 </root>

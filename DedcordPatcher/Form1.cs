@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace DedcordPatcher
             {
                 RepoLink.Text = File.ReadAllText("ClientRepoTempDedcord");
             }
-            updatechecks();
+            updatechecks(false);
             Logbox.Text += "\nPlanned client folder: " + ClientFolder + "\n\n";
         }
 
@@ -41,11 +42,14 @@ namespace DedcordPatcher
             process.StartInfo.CreateNoWindow = true;
             process.Start();
             process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
+            //process.BeginErrorReadLine();
             cmd = process.StandardInput;
             process.WaitForExit();
+            process.OutputDataReceived -= output;
+            process.ErrorDataReceived -= output;
             process.CancelErrorRead();
             process.CancelOutputRead();
+            startprocess();
         }
 
         private void output(object sender, DataReceivedEventArgs e)
@@ -65,30 +69,24 @@ namespace DedcordPatcher
                 if (GitClone.Text == "Delete")
                 {
                     GitClone.Text = "Working..";
-                    updatechecks();
                     cmd.WriteLine("rd /s /q " + ClientFolder);
+                    updatechecks();
                 }
                 else
                 {
                     GitClone.Text = "Working..";
-                    updatechecks();
                     cmd.WriteLine("cd " + Directory.GetCurrentDirectory());
                     cmd.WriteLine("git clone " + RepoLink.Text);
+                    updatechecks();
                 }
         }
 
-        private async void restartcmd()
-        {
-            Logbox.Text = "";
-            process.Kill();
-            await Task.Run(() => startprocess());
-        }
-
-        private async void updatechecks()
+        private async void updatechecks(bool wait = true)
         {
             await Task.Run(() =>
             {
-                Thread.Sleep(1000);
+                if (wait)
+                    Thread.Sleep(1000);
                 ClientFolder = Directory.GetCurrentDirectory() + "\\" + Functions.GetLastDirectoryName(RepoLink.Text.Replace('/', Path.DirectorySeparatorChar));
                 ClientDetector.Text = Directory.Exists(ClientFolder) ? "Client: Found" : "Client: Not found";
                 GitClone.Text = ClientDetector.Text == "Client: Found" ? "Delete" : "Git clone";
@@ -110,14 +108,45 @@ namespace DedcordPatcher
 
         private void LaunchInstaller_Click(object sender, EventArgs e)
         {
-            cmd.WriteLine("cd " + ClientFolder);
-            cmd.WriteLine("pnpm inject");
+            ProcessStartInfo meow = new ProcessStartInfo();
+            meow.WorkingDirectory = ClientFolder;
+            meow.FileName = "pnpm";
+            meow.Arguments = "inject";
+            Process.Start(meow);
         }
 
         private void RepoLink_TextChanged(object sender, EventArgs e)
         {
             updatechecks();
             File.WriteAllText("ClientRepoTempDedcord", RepoLink.Text);
+        }
+
+        private void Logbox_TextChanged(object sender, EventArgs e)
+        {
+            Logbox.SelectionStart = Logbox.Text.Length;
+            Logbox.ScrollToCaret();
+        }
+
+        private void PluginsFetch_Click(object sender, EventArgs e)
+        {
+            FetchPluh();
+        }
+
+        string[] namelist;
+        string[] downloadlist;
+
+        WebClient Wc = new WebClient();
+        private void FetchPluh()
+        {
+            string RawPluginString = Wc.DownloadString(Pluginlistlink.Text).Replace("Âµ", "µ");
+            string[] RawPluginList = RawPluginString.Split('\n');
+            namelist = RawPluginList[0].Split('µ');
+            downloadlist = RawPluginList[1].Split('µ');
+            PluginList.Items.Clear();
+            foreach (string plugin in namelist)
+            {
+                PluginList.Items.Add(plugin);
+            }
         }
     }
 

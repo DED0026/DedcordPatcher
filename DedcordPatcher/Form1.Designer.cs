@@ -28,18 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.DMTab = new System.Windows.Forms.TabPage();
+            this.PluginsFetch = new System.Windows.Forms.Button();
+            this.Pluginlistlink = new System.Windows.Forms.TextBox();
+            this.PluginList = new System.Windows.Forms.CheckedListBox();
             this.DVTab = new System.Windows.Forms.TabPage();
+            this.LaunchInstaller = new System.Windows.Forms.Button();
+            this.RebuildAndRestart = new System.Windows.Forms.Button();
+            this.RebuildClient = new System.Windows.Forms.Button();
+            this.InstallPackages = new System.Windows.Forms.Button();
             this.GitClone = new System.Windows.Forms.Button();
             this.ClientDetector = new System.Windows.Forms.Label();
             this.RepoLink = new System.Windows.Forms.TextBox();
             this.AppTabs = new System.Windows.Forms.TabControl();
             this.Logtab = new System.Windows.Forms.TabPage();
             this.Logbox = new System.Windows.Forms.RichTextBox();
-            this.LaunchInstaller = new System.Windows.Forms.Button();
-            this.RebuildAndRestart = new System.Windows.Forms.Button();
-            this.RebuildClient = new System.Windows.Forms.Button();
-            this.InstallPackages = new System.Windows.Forms.Button();
+            this.DMTab.SuspendLayout();
             this.DVTab.SuspendLayout();
             this.AppTabs.SuspendLayout();
             this.Logtab.SuspendLayout();
@@ -47,6 +52,9 @@
             // 
             // DMTab
             // 
+            this.DMTab.Controls.Add(this.PluginsFetch);
+            this.DMTab.Controls.Add(this.Pluginlistlink);
+            this.DMTab.Controls.Add(this.PluginList);
             this.DMTab.Location = new System.Drawing.Point(4, 25);
             this.DMTab.Name = "DMTab";
             this.DMTab.Padding = new System.Windows.Forms.Padding(3);
@@ -54,6 +62,32 @@
             this.DMTab.TabIndex = 1;
             this.DMTab.Text = "Download plugins";
             this.DMTab.UseVisualStyleBackColor = true;
+            // 
+            // PluginsFetch
+            // 
+            this.PluginsFetch.Location = new System.Drawing.Point(701, 12);
+            this.PluginsFetch.Name = "PluginsFetch";
+            this.PluginsFetch.Size = new System.Drawing.Size(75, 23);
+            this.PluginsFetch.TabIndex = 2;
+            this.PluginsFetch.Text = "Fetch";
+            this.PluginsFetch.UseVisualStyleBackColor = true;
+            this.PluginsFetch.Click += new System.EventHandler(this.PluginsFetch_Click);
+            // 
+            // Pluginlistlink
+            // 
+            this.Pluginlistlink.Location = new System.Drawing.Point(8, 12);
+            this.Pluginlistlink.Name = "Pluginlistlink";
+            this.Pluginlistlink.Size = new System.Drawing.Size(686, 22);
+            this.Pluginlistlink.TabIndex = 1;
+            this.Pluginlistlink.Text = "https://raw.githubusercontent.com/DED0026/DedcordPatcher/master/PluginIndex";
+            // 
+            // PluginList
+            // 
+            this.PluginList.FormattingEnabled = true;
+            this.PluginList.Location = new System.Drawing.Point(8, 40);
+            this.PluginList.Name = "PluginList";
+            this.PluginList.Size = new System.Drawing.Size(384, 361);
+            this.PluginList.TabIndex = 0;
             // 
             // DVTab
             // 
@@ -71,6 +105,49 @@
             this.DVTab.TabIndex = 0;
             this.DVTab.Text = "Client manager";
             this.DVTab.UseVisualStyleBackColor = true;
+            // 
+            // LaunchInstaller
+            // 
+            this.LaunchInstaller.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LaunchInstaller.Location = new System.Drawing.Point(305, 251);
+            this.LaunchInstaller.Name = "LaunchInstaller";
+            this.LaunchInstaller.Size = new System.Drawing.Size(174, 23);
+            this.LaunchInstaller.TabIndex = 3;
+            this.LaunchInstaller.Text = "Launch installer";
+            this.LaunchInstaller.UseVisualStyleBackColor = true;
+            this.LaunchInstaller.Click += new System.EventHandler(this.LaunchInstaller_Click);
+            // 
+            // RebuildAndRestart
+            // 
+            this.RebuildAndRestart.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.RebuildAndRestart.Location = new System.Drawing.Point(305, 222);
+            this.RebuildAndRestart.Name = "RebuildAndRestart";
+            this.RebuildAndRestart.Size = new System.Drawing.Size(174, 23);
+            this.RebuildAndRestart.TabIndex = 4;
+            this.RebuildAndRestart.Text = "Rebuild and Restart";
+            this.RebuildAndRestart.UseVisualStyleBackColor = true;
+            // 
+            // RebuildClient
+            // 
+            this.RebuildClient.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.RebuildClient.Location = new System.Drawing.Point(305, 193);
+            this.RebuildClient.Name = "RebuildClient";
+            this.RebuildClient.Size = new System.Drawing.Size(174, 23);
+            this.RebuildClient.TabIndex = 5;
+            this.RebuildClient.Text = "Rebuild";
+            this.RebuildClient.UseVisualStyleBackColor = true;
+            this.RebuildClient.Click += new System.EventHandler(this.RebuildClient_Click);
+            // 
+            // InstallPackages
+            // 
+            this.InstallPackages.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.InstallPackages.Location = new System.Drawing.Point(305, 164);
+            this.InstallPackages.Name = "InstallPackages";
+            this.InstallPackages.Size = new System.Drawing.Size(174, 23);
+            this.InstallPackages.TabIndex = 6;
+            this.InstallPackages.Text = "Install packages";
+            this.InstallPackages.UseVisualStyleBackColor = true;
+            this.InstallPackages.Click += new System.EventHandler(this.InstallPackages_Click);
             // 
             // GitClone
             // 
@@ -129,56 +206,15 @@
             // Logbox
             // 
             this.Logbox.BackColor = System.Drawing.Color.Black;
+            this.Logbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Logbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Logbox.ForeColor = System.Drawing.Color.Lime;
             this.Logbox.Location = new System.Drawing.Point(3, 3);
             this.Logbox.Name = "Logbox";
             this.Logbox.Size = new System.Drawing.Size(786, 415);
             this.Logbox.TabIndex = 0;
-            this.Logbox.Text = "Welcome To DedcordPatcher.";
-            // 
-            // LaunchInstaller
-            // 
-            this.LaunchInstaller.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.LaunchInstaller.Location = new System.Drawing.Point(305, 251);
-            this.LaunchInstaller.Name = "LaunchInstaller";
-            this.LaunchInstaller.Size = new System.Drawing.Size(174, 23);
-            this.LaunchInstaller.TabIndex = 3;
-            this.LaunchInstaller.Text = "Launch installer";
-            this.LaunchInstaller.UseVisualStyleBackColor = true;
-            this.LaunchInstaller.Click += new System.EventHandler(this.LaunchInstaller_Click);
-            // 
-            // RebuildAndRestart
-            // 
-            this.RebuildAndRestart.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.RebuildAndRestart.Location = new System.Drawing.Point(305, 222);
-            this.RebuildAndRestart.Name = "RebuildAndRestart";
-            this.RebuildAndRestart.Size = new System.Drawing.Size(174, 23);
-            this.RebuildAndRestart.TabIndex = 4;
-            this.RebuildAndRestart.Text = "Rebuild and Restart";
-            this.RebuildAndRestart.UseVisualStyleBackColor = true;
-            // 
-            // RebuildClient
-            // 
-            this.RebuildClient.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.RebuildClient.Location = new System.Drawing.Point(305, 193);
-            this.RebuildClient.Name = "RebuildClient";
-            this.RebuildClient.Size = new System.Drawing.Size(174, 23);
-            this.RebuildClient.TabIndex = 5;
-            this.RebuildClient.Text = "Rebuild";
-            this.RebuildClient.UseVisualStyleBackColor = true;
-            this.RebuildClient.Click += new System.EventHandler(this.RebuildClient_Click);
-            // 
-            // InstallPackages
-            // 
-            this.InstallPackages.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.InstallPackages.Location = new System.Drawing.Point(305, 164);
-            this.InstallPackages.Name = "InstallPackages";
-            this.InstallPackages.Size = new System.Drawing.Size(174, 23);
-            this.InstallPackages.TabIndex = 6;
-            this.InstallPackages.Text = "Install packages";
-            this.InstallPackages.UseVisualStyleBackColor = true;
-            this.InstallPackages.Click += new System.EventHandler(this.InstallPackages_Click);
+            this.Logbox.Text = resources.GetString("Logbox.Text");
+            this.Logbox.TextChanged += new System.EventHandler(this.Logbox_TextChanged);
             // 
             // Form1
             // 
@@ -189,6 +225,8 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.DMTab.ResumeLayout(false);
+            this.DMTab.PerformLayout();
             this.DVTab.ResumeLayout(false);
             this.DVTab.PerformLayout();
             this.AppTabs.ResumeLayout(false);
@@ -211,6 +249,9 @@
         private System.Windows.Forms.Button RebuildAndRestart;
         private System.Windows.Forms.Button RebuildClient;
         private System.Windows.Forms.Button InstallPackages;
+        private System.Windows.Forms.CheckedListBox PluginList;
+        private System.Windows.Forms.Button PluginsFetch;
+        private System.Windows.Forms.TextBox Pluginlistlink;
     }
 }
 
