@@ -20,6 +20,7 @@ namespace DedcordPatcher
         public Form1()
         {
             InitializeComponent();
+            boykisser();
             if (File.Exists("ClientRepoTempDedcord"))
             {
                 RepoLink.Text = File.ReadAllText("ClientRepoTempDedcord");
@@ -149,7 +150,7 @@ namespace DedcordPatcher
             foreach (string plugin in namelist)
             {
                 PluginList.Items.Add(plugin);
-                string download = downloadlist[PluginList.Items.Count -1];
+                string download = downloadlist[PluginList.Items.Count - 1];
                 string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
 
                 if (Directory.Exists(ClientFolder + "\\src\\userplugins\\" + foldername))
@@ -189,6 +190,81 @@ namespace DedcordPatcher
                 Functions.KillProcess("DiscordPTB");
             if (DiscordCanary.Checked)
                 Functions.KillProcess("DiscordCanary");
+        }
+
+        public bool boykisser()
+        {
+            return true;
+        }
+
+
+        private void Watcher_Error(object sender, ErrorEventArgs e) => reload();
+
+        private void Watcher_event(object sender, FileSystemEventArgs e) => reload();
+
+        string LookPath;
+
+        FileSystemWatcher Folderwatcher;
+        public void reload()
+        {
+            if (Directory.Exists(LookPath))
+            {
+                LookPath = Path.GetFullPath(LookPath);
+                try
+                {
+                    Folderwatcher.Dispose();
+                }
+                catch { }
+                Folderwatcher = new FileSystemWatcher(LookPath, "*.*");
+                Folderwatcher.NotifyFilter = NotifyFilters.Attributes
+                                     | NotifyFilters.CreationTime
+                                     | NotifyFilters.DirectoryName
+                                     | NotifyFilters.FileName
+                                     | NotifyFilters.LastAccess
+                                     | NotifyFilters.LastWrite
+                                     | NotifyFilters.Security
+                                     | NotifyFilters.Size;
+                Folderwatcher.EnableRaisingEvents = true;
+                Folderwatcher.Created += Watcher_event;
+                Folderwatcher.Deleted += Watcher_event;
+                Folderwatcher.Renamed += Watcher_event;
+                Folderwatcher.Changed += Watcher_event;
+                Folderwatcher.Error += Watcher_Error;
+
+                InstalledPluginList.Items.Clear();
+                InstalledPluginList.Items.Add("..");
+                foreach (string file in Directory.GetFiles(LookPath))
+                    InstalledPluginList.Items.Add(file.Remove(0, LookPath.Length).Trim('\\'));
+                foreach (string directory in Directory.GetDirectories(LookPath))
+                    InstalledPluginList.Items.Add(directory.Remove(0, LookPath.Length).Trim('\\'));
+            }
+            else
+            {
+                LookPath = Path.GetDirectoryName(LookPath);
+                reload();
+            }
+        }
+
+
+        private void AppTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (AppTabs.SelectedIndex == 1)
+            {
+                if (Directory.Exists(ClientFolder))
+                {
+                    MessageBox.Show("meow\n" + ClientFolder + CustomPluginsPath.Text);
+                    if (Directory.Exists(ClientFolder + CustomPluginsPath.Text))
+                    {
+                        MessageBox.Show("meow2");
+                        LookPath = ClientFolder + CustomPluginsPath;
+                        reload();
+                    }
+                }
+                else
+                {
+                    InstalledPluginList.Items.Add("Not installed.");
+                }
+            }
         }
     }
 
