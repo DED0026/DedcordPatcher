@@ -113,6 +113,8 @@
             this.InstalledPluginList.Name = "InstalledPluginList";
             this.InstalledPluginList.Size = new System.Drawing.Size(364, 326);
             this.InstalledPluginList.TabIndex = 0;
+            this.InstalledPluginList.SelectedIndexChanged += new System.EventHandler(this.InstalledPluginList_SelectedIndexChanged);
+            this.InstalledPluginList.DoubleClick += new System.EventHandler(this.InstalledPluginList_DoubleClick);
             // 
             // AdvancedPlugins
             // 

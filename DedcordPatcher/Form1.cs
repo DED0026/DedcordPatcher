@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,6 +22,8 @@ namespace DedcordPatcher
             updatechecks(false);
             Logbox.Text += "\nPlanned client folder: " + ClientFolder + "\n\n";
         }
+
+        bool ClientDownloaded;
 
         StreamWriter cmd;
         Process process = new Process();
@@ -70,7 +66,7 @@ namespace DedcordPatcher
                 if (GitClone.Text == "Delete")
                 {
                     GitClone.Text = "Working..";
-                    cmd.WriteLine("rd /s /q " + ClientFolder);
+                    cmd.WriteLine("rd /s /q \"" + ClientFolder + "\"");
                     updatechecks();
                 }
                 else
@@ -89,8 +85,9 @@ namespace DedcordPatcher
                 if (wait)
                     Thread.Sleep(1000);
                 ClientFolder = Directory.GetCurrentDirectory() + "\\" + Functions.GetLastDirectoryName(RepoLink.Text.Replace('/', Path.DirectorySeparatorChar));
-                ClientDetector.Text = Directory.Exists(ClientFolder) ? "Client: Found" : "Client: Not found";
-                GitClone.Text = ClientDetector.Text == "Client: Found" ? "Delete" : "Git clone";
+                ClientDownloaded = Directory.Exists(ClientFolder);
+                ClientDetector.Text = ClientDownloaded ? "Client: Found" : "Client: Not found";
+                GitClone.Text = ClientDownloaded ? "Delete" : "Git clone";
 
             });
         }
@@ -130,6 +127,7 @@ namespace DedcordPatcher
 
         private void PluginsFetch_Click(object sender, EventArgs e)
         {
+            updatechecks(false);
             FetchPluh();
         }
 
@@ -139,12 +137,20 @@ namespace DedcordPatcher
         WebClient Wc = new WebClient();
         private void FetchPluh()
         {
-            if (!Directory.Exists(ClientFolder + "\\src\\userplugins"))
-                Directory.CreateDirectory(ClientFolder + "\\src\\userplugins");
+            if (!ClientDownloaded)
+            {
+                MessageBox.Show("Client not installed.");
+                return;
+            }
+
+            if (!Directory.Exists(ClientFolder + CustomPluginsPath.Text))
+                Directory.CreateDirectory(ClientFolder + CustomPluginsPath.Text);
+
             string RawPluginString = Wc.DownloadString(Pluginlistlink.Text).Replace("Âµ", "µ");
             string[] RawPluginList = RawPluginString.Split('\n');
             namelist = RawPluginList[0].Split('µ');
             downloadlist = RawPluginList[1].Split('µ');
+
             PluginList.Items.Clear();
             respond = false;
             foreach (string plugin in namelist)
@@ -153,31 +159,30 @@ namespace DedcordPatcher
                 string download = downloadlist[PluginList.Items.Count - 1];
                 string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
 
-                if (Directory.Exists(ClientFolder + "\\src\\userplugins\\" + foldername))
-                {
+                if (Directory.Exists(ClientFolder + CustomPluginsPath.Text + "\\" + foldername))
                     PluginList.SetItemChecked(PluginList.Items.Count - 1, true);
-                }
             }
             respond = true;
         }
 
         private void PluginList_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (respond)
+            if (!respond)
             {
-                string download = downloadlist[PluginList.SelectedIndex];
-                string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
-                if (e.NewValue == CheckState.Checked)
-                {
-                    cmd.WriteLine("cd " + ClientFolder + "\\src\\userplugins");
-                    cmd.WriteLine("git clone " + download);
-                    //MessageBox.Show(foldername + "\n" + (string)PluginList.SelectedItem + "\n" + downloadlist[PluginList.SelectedIndex]);
-                }
-                else
-                {
-                    cmd.WriteLine("cd " + ClientFolder + "\\src\\userplugins");
-                    cmd.WriteLine("rd /s /q " + ClientFolder + "\\src\\userplugins\\" + foldername);
-                }
+                return;
+            }
+
+            string download = downloadlist[PluginList.SelectedIndex];
+            string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
+            if (e.NewValue == CheckState.Checked)
+            {
+                cmd.WriteLine("cd " + ClientFolder + CustomPluginsPath.Text);
+                cmd.WriteLine("git clone " + download);
+            }
+            else
+            {
+                cmd.WriteLine("cd " + ClientFolder + CustomPluginsPath.Text);
+                cmd.WriteLine("rd /s /q \"" + ClientFolder + CustomPluginsPath.Text + "\\" + foldername + "\"");
             }
         }
 
@@ -207,42 +212,41 @@ namespace DedcordPatcher
         FileSystemWatcher Folderwatcher;
         public void reload()
         {
-            if (Directory.Exists(LookPath))
-            {
-                LookPath = Path.GetFullPath(LookPath);
-                try
-                {
-                    Folderwatcher.Dispose();
-                }
-                catch { }
-                Folderwatcher = new FileSystemWatcher(LookPath, "*.*");
-                Folderwatcher.NotifyFilter = NotifyFilters.Attributes
-                                     | NotifyFilters.CreationTime
-                                     | NotifyFilters.DirectoryName
-                                     | NotifyFilters.FileName
-                                     | NotifyFilters.LastAccess
-                                     | NotifyFilters.LastWrite
-                                     | NotifyFilters.Security
-                                     | NotifyFilters.Size;
-                Folderwatcher.EnableRaisingEvents = true;
-                Folderwatcher.Created += Watcher_event;
-                Folderwatcher.Deleted += Watcher_event;
-                Folderwatcher.Renamed += Watcher_event;
-                Folderwatcher.Changed += Watcher_event;
-                Folderwatcher.Error += Watcher_Error;
-
-                InstalledPluginList.Items.Clear();
-                InstalledPluginList.Items.Add("..");
-                foreach (string file in Directory.GetFiles(LookPath))
-                    InstalledPluginList.Items.Add(file.Remove(0, LookPath.Length).Trim('\\'));
-                foreach (string directory in Directory.GetDirectories(LookPath))
-                    InstalledPluginList.Items.Add(directory.Remove(0, LookPath.Length).Trim('\\'));
-            }
-            else
+            if (!Directory.Exists(LookPath))
             {
                 LookPath = Path.GetDirectoryName(LookPath);
                 reload();
+                return;
             }
+
+            LookPath = Path.GetFullPath(LookPath);
+
+            try { Folderwatcher.Dispose(); }
+            catch { }
+
+            Folderwatcher = new FileSystemWatcher(LookPath, "*.*")
+            {
+                NotifyFilter = NotifyFilters.Attributes
+                                 | NotifyFilters.CreationTime
+                                 | NotifyFilters.DirectoryName
+                                 | NotifyFilters.FileName
+                                 | NotifyFilters.Security
+                                 | NotifyFilters.Size,
+                EnableRaisingEvents = true
+            };
+
+            Folderwatcher.Created += Watcher_event;
+            Folderwatcher.Deleted += Watcher_event;
+            Folderwatcher.Renamed += Watcher_event;
+            Folderwatcher.Changed += Watcher_event;
+            Folderwatcher.Error += Watcher_Error;
+
+            InstalledPluginList.Items.Clear();
+            InstalledPluginList.Items.Add("..");
+            foreach (string file in Directory.GetFiles(LookPath))
+                InstalledPluginList.Items.Add(file.Remove(0, LookPath.Length).Trim('\\'));
+            foreach (string directory in Directory.GetDirectories(LookPath))
+                InstalledPluginList.Items.Add(directory.Remove(0, LookPath.Length).Trim('\\'));
         }
 
 
@@ -250,19 +254,49 @@ namespace DedcordPatcher
         {
             if (AppTabs.SelectedIndex == 1)
             {
-                if (Directory.Exists(ClientFolder))
+                if (ClientDownloaded)
                 {
-                    MessageBox.Show("meow\n" + ClientFolder + CustomPluginsPath.Text);
                     if (Directory.Exists(ClientFolder + CustomPluginsPath.Text))
                     {
-                        MessageBox.Show("meow2");
-                        LookPath = ClientFolder + CustomPluginsPath;
+                        LookPath = ClientFolder + CustomPluginsPath.Text;
                         reload();
+                        Clickable = true;
                     }
                 }
                 else
                 {
                     InstalledPluginList.Items.Add("Not installed.");
+                    Clickable = false;
+                }
+            }
+        }
+
+        int LastIndex;
+        private void InstalledPluginList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LastIndex = InstalledPluginList.SelectedIndex;
+        }
+
+        bool Clickable;
+        private void InstalledPluginList_DoubleClick(object sender, EventArgs e)
+        {
+            if (InstalledPluginList.SelectedIndex == -1 || !Clickable)
+                return;
+
+            if (InstalledPluginList.SelectedIndex == LastIndex)
+            {
+                string selection = LookPath + "\\" + InstalledPluginList.SelectedItem.ToString();
+                if (Directory.Exists(selection))
+                {
+                    LookPath = selection;
+                    reload();
+                }
+                else
+                {
+                    ProcessStartInfo Launchedprocess = new ProcessStartInfo();
+                    Launchedprocess.WorkingDirectory = Path.GetDirectoryName(selection);
+                    Launchedprocess.FileName = selection;
+                    Process.Start(Launchedprocess);
                 }
             }
         }
