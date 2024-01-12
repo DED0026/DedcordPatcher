@@ -30,22 +30,21 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.DMTab = new System.Windows.Forms.TabPage();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.PluginManagerTabs = new System.Windows.Forms.TabControl();
             this.PluginsMenu = new System.Windows.Forms.TabPage();
             this.InstalledPluginList = new System.Windows.Forms.ListBox();
-            this.AdvancedPlugins = new System.Windows.Forms.TabPage();
+            this.ExtraPluginOptions = new System.Windows.Forms.TabPage();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.CustomPluginsPath = new System.Windows.Forms.TextBox();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.button1 = new System.Windows.Forms.Button();
             this.CustomPlugin = new System.Windows.Forms.TextBox();
             this.FormatLabel = new System.Windows.Forms.Label();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.PluginsFetch = new System.Windows.Forms.Button();
             this.Pluginlistlink = new System.Windows.Forms.TextBox();
             this.PluginList = new System.Windows.Forms.CheckedListBox();
             this.DVTab = new System.Windows.Forms.TabPage();
+            this.OpenFolder = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.DiscordCanary = new System.Windows.Forms.CheckBox();
             this.DiscordPTB = new System.Windows.Forms.CheckBox();
@@ -60,11 +59,10 @@
             this.AppTabs = new System.Windows.Forms.TabControl();
             this.Logtab = new System.Windows.Forms.TabPage();
             this.Logbox = new System.Windows.Forms.RichTextBox();
-            this.OpenFolder = new System.Windows.Forms.Button();
             this.DMTab.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.PluginManagerTabs.SuspendLayout();
             this.PluginsMenu.SuspendLayout();
-            this.AdvancedPlugins.SuspendLayout();
+            this.ExtraPluginOptions.SuspendLayout();
             this.DVTab.SuspendLayout();
             this.AppTabs.SuspendLayout();
             this.Logtab.SuspendLayout();
@@ -72,7 +70,7 @@
             // 
             // DMTab
             // 
-            this.DMTab.Controls.Add(this.tabControl1);
+            this.DMTab.Controls.Add(this.PluginManagerTabs);
             this.DMTab.Controls.Add(this.PluginsFetch);
             this.DMTab.Controls.Add(this.Pluginlistlink);
             this.DMTab.Controls.Add(this.PluginList);
@@ -84,17 +82,17 @@
             this.DMTab.Text = "Download plugins";
             this.DMTab.UseVisualStyleBackColor = true;
             // 
-            // tabControl1
+            // PluginManagerTabs
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.PluginManagerTabs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.PluginsMenu);
-            this.tabControl1.Controls.Add(this.AdvancedPlugins);
-            this.tabControl1.Location = new System.Drawing.Point(398, 40);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(378, 361);
-            this.tabControl1.TabIndex = 7;
+            this.PluginManagerTabs.Controls.Add(this.PluginsMenu);
+            this.PluginManagerTabs.Controls.Add(this.ExtraPluginOptions);
+            this.PluginManagerTabs.Location = new System.Drawing.Point(398, 40);
+            this.PluginManagerTabs.Name = "PluginManagerTabs";
+            this.PluginManagerTabs.SelectedIndex = 0;
+            this.PluginManagerTabs.Size = new System.Drawing.Size(378, 361);
+            this.PluginManagerTabs.TabIndex = 7;
             // 
             // PluginsMenu
             // 
@@ -119,23 +117,34 @@
             this.InstalledPluginList.SelectedIndexChanged += new System.EventHandler(this.InstalledPluginList_SelectedIndexChanged);
             this.InstalledPluginList.DoubleClick += new System.EventHandler(this.InstalledPluginList_DoubleClick);
             // 
-            // AdvancedPlugins
+            // ExtraPluginOptions
             // 
-            this.AdvancedPlugins.Controls.Add(this.label2);
-            this.AdvancedPlugins.Controls.Add(this.CustomPluginsPath);
-            this.AdvancedPlugins.Controls.Add(this.radioButton2);
-            this.AdvancedPlugins.Controls.Add(this.button1);
-            this.AdvancedPlugins.Controls.Add(this.CustomPlugin);
-            this.AdvancedPlugins.Controls.Add(this.FormatLabel);
-            this.AdvancedPlugins.Controls.Add(this.radioButton1);
-            this.AdvancedPlugins.Controls.Add(this.radioButton3);
-            this.AdvancedPlugins.Location = new System.Drawing.Point(4, 25);
-            this.AdvancedPlugins.Name = "AdvancedPlugins";
-            this.AdvancedPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.AdvancedPlugins.Size = new System.Drawing.Size(370, 332);
-            this.AdvancedPlugins.TabIndex = 1;
-            this.AdvancedPlugins.Text = "Advanced";
-            this.AdvancedPlugins.UseVisualStyleBackColor = true;
+            this.ExtraPluginOptions.Controls.Add(this.listBox1);
+            this.ExtraPluginOptions.Controls.Add(this.label2);
+            this.ExtraPluginOptions.Controls.Add(this.CustomPluginsPath);
+            this.ExtraPluginOptions.Controls.Add(this.button1);
+            this.ExtraPluginOptions.Controls.Add(this.CustomPlugin);
+            this.ExtraPluginOptions.Controls.Add(this.FormatLabel);
+            this.ExtraPluginOptions.Location = new System.Drawing.Point(4, 25);
+            this.ExtraPluginOptions.Name = "ExtraPluginOptions";
+            this.ExtraPluginOptions.Padding = new System.Windows.Forms.Padding(3);
+            this.ExtraPluginOptions.Size = new System.Drawing.Size(370, 332);
+            this.ExtraPluginOptions.TabIndex = 1;
+            this.ExtraPluginOptions.Text = "Extra";
+            this.ExtraPluginOptions.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Items.AddRange(new object[] {
+            "Github Plugin",
+            "Script",
+            "Zip",
+            "Index Radar"});
+            this.listBox1.Location = new System.Drawing.Point(9, 125);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(171, 68);
+            this.listBox1.TabIndex = 0;
             // 
             // label2
             // 
@@ -153,21 +162,11 @@
             this.CustomPluginsPath.Size = new System.Drawing.Size(112, 22);
             this.CustomPluginsPath.TabIndex = 8;
             this.CustomPluginsPath.Text = "\\src\\UserPlugins";
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(9, 155);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(48, 20);
-            this.radioButton2.TabIndex = 4;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "ZIP";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.CustomPluginsPath.TextChanged += new System.EventHandler(this.CustomPluginsPath_TextChanged);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(186, 155);
+            this.button1.Location = new System.Drawing.Point(186, 147);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(49, 46);
             this.button1.TabIndex = 6;
@@ -190,28 +189,6 @@
             this.FormatLabel.Size = new System.Drawing.Size(52, 16);
             this.FormatLabel.TabIndex = 5;
             this.FormatLabel.Text = "Format:";
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(9, 129);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(149, 20);
-            this.radioButton1.TabIndex = 4;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Github proper format";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(9, 181);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(123, 20);
-            this.radioButton3.TabIndex = 4;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Old single script";
-            this.radioButton3.UseVisualStyleBackColor = true;
             // 
             // PluginsFetch
             // 
@@ -268,6 +245,16 @@
             this.DVTab.TabIndex = 0;
             this.DVTab.Text = "Client manager";
             this.DVTab.UseVisualStyleBackColor = true;
+            // 
+            // OpenFolder
+            // 
+            this.OpenFolder.Location = new System.Drawing.Point(635, 96);
+            this.OpenFolder.Name = "OpenFolder";
+            this.OpenFolder.Size = new System.Drawing.Size(23, 23);
+            this.OpenFolder.TabIndex = 9;
+            this.OpenFolder.Text = "💾";
+            this.OpenFolder.UseVisualStyleBackColor = true;
+            this.OpenFolder.Click += new System.EventHandler(this.OpenFolder_Click);
             // 
             // label1
             // 
@@ -430,16 +417,6 @@
             this.Logbox.Text = resources.GetString("Logbox.Text");
             this.Logbox.TextChanged += new System.EventHandler(this.Logbox_TextChanged);
             // 
-            // OpenFolder
-            // 
-            this.OpenFolder.Location = new System.Drawing.Point(635, 96);
-            this.OpenFolder.Name = "OpenFolder";
-            this.OpenFolder.Size = new System.Drawing.Size(23, 23);
-            this.OpenFolder.TabIndex = 9;
-            this.OpenFolder.Text = "💾";
-            this.OpenFolder.UseVisualStyleBackColor = true;
-            this.OpenFolder.Click += new System.EventHandler(this.OpenFolder_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -451,10 +428,10 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.DMTab.ResumeLayout(false);
             this.DMTab.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.PluginManagerTabs.ResumeLayout(false);
             this.PluginsMenu.ResumeLayout(false);
-            this.AdvancedPlugins.ResumeLayout(false);
-            this.AdvancedPlugins.PerformLayout();
+            this.ExtraPluginOptions.ResumeLayout(false);
+            this.ExtraPluginOptions.PerformLayout();
             this.DVTab.ResumeLayout(false);
             this.DVTab.PerformLayout();
             this.AppTabs.ResumeLayout(false);
@@ -486,17 +463,15 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox CustomPlugin;
         private System.Windows.Forms.Label FormatLabel;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl PluginManagerTabs;
         private System.Windows.Forms.TabPage PluginsMenu;
-        private System.Windows.Forms.TabPage AdvancedPlugins;
+        private System.Windows.Forms.TabPage ExtraPluginOptions;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListBox InstalledPluginList;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox CustomPluginsPath;
         private System.Windows.Forms.Button OpenFolder;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

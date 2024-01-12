@@ -18,12 +18,22 @@ namespace DedcordPatcher
             OpenFolder.Visible = false;
             if (File.Exists("ClientRepoTempDedcord"))
             {
-                RepoLink.Text = File.ReadAllText("ClientRepoTempDedcord");
+                RepoLink.Text = LoadSaveFile()[0];
+                CustomPluginsPath.Text = LoadSaveFile()[1];
             }
             updatechecks(false);
             Logbox.Text += "\nPlanned client folder: " + ClientFolder + "\n\n";
         }
 
+        string[] LoadSaveFile()
+        {
+            return File.ReadAllLines("ClientRepoTempDedcord");
+        }
+
+        void SaveLoadFile()
+        {
+            File.WriteAllText("ClientRepoTempDedcord", $"{RepoLink.Text}\n{CustomPluginsPath.Text}");
+        }
         bool ClientDownloaded;
 
         StreamWriter cmd;
@@ -67,8 +77,7 @@ namespace DedcordPatcher
                 if (ClientDownloaded)
                 {
                     GitClone.Text = "Working..";
-                    try { Folderwatcher.Dispose(); }
-                    catch { }
+                    Folderwatcher?.Dispose();
                     cmd.WriteLine("rd /s /q \"" + ClientFolder + "\"");
                     updatechecks();
                 }
@@ -120,7 +129,7 @@ namespace DedcordPatcher
         private void RepoLink_TextChanged(object sender, EventArgs e)
         {
             updatechecks();
-            File.WriteAllText("ClientRepoTempDedcord", RepoLink.Text);
+            SaveLoadFile();
         }
 
         private void Logbox_TextChanged(object sender, EventArgs e)
@@ -262,8 +271,7 @@ namespace DedcordPatcher
 
             LookPath = Path.GetFullPath(LookPath);
 
-            try { Folderwatcher.Dispose(); }
-            catch { }
+            Folderwatcher?.Dispose();
 
             Folderwatcher = new FileSystemWatcher(LookPath, "*.*")
             {
@@ -362,6 +370,12 @@ namespace DedcordPatcher
         private void OpenFolder_Click(object sender, EventArgs e)
         {
             Process.Start("explorer", ClientFolder);
+        }
+
+        private void CustomPluginsPath_TextChanged(object sender, EventArgs e)
+        {
+            SaveLoadFile();
+            updatechecks();
         }
     }
 
