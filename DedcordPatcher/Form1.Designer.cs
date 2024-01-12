@@ -60,6 +60,7 @@
             this.AppTabs = new System.Windows.Forms.TabControl();
             this.Logtab = new System.Windows.Forms.TabPage();
             this.Logbox = new System.Windows.Forms.RichTextBox();
+            this.OpenFolder = new System.Windows.Forms.Button();
             this.DMTab.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.PluginsMenu.SuspendLayout();
@@ -85,6 +86,8 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.PluginsMenu);
             this.tabControl1.Controls.Add(this.AdvancedPlugins);
             this.tabControl1.Location = new System.Drawing.Point(398, 40);
@@ -212,6 +215,7 @@
             // 
             // PluginsFetch
             // 
+            this.PluginsFetch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.PluginsFetch.Location = new System.Drawing.Point(701, 12);
             this.PluginsFetch.Name = "PluginsFetch";
             this.PluginsFetch.Size = new System.Drawing.Size(75, 23);
@@ -222,6 +226,8 @@
             // 
             // Pluginlistlink
             // 
+            this.Pluginlistlink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Pluginlistlink.Location = new System.Drawing.Point(8, 12);
             this.Pluginlistlink.Name = "Pluginlistlink";
             this.Pluginlistlink.Size = new System.Drawing.Size(686, 22);
@@ -230,6 +236,10 @@
             // 
             // PluginList
             // 
+            this.PluginList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PluginList.CheckOnClick = true;
             this.PluginList.FormattingEnabled = true;
             this.PluginList.Location = new System.Drawing.Point(8, 40);
             this.PluginList.Name = "PluginList";
@@ -239,6 +249,7 @@
             // 
             // DVTab
             // 
+            this.DVTab.Controls.Add(this.OpenFolder);
             this.DVTab.Controls.Add(this.label1);
             this.DVTab.Controls.Add(this.DiscordCanary);
             this.DVTab.Controls.Add(this.DiscordPTB);
@@ -354,7 +365,7 @@
             // GitClone
             // 
             this.GitClone.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.GitClone.Location = new System.Drawing.Point(464, 99);
+            this.GitClone.Location = new System.Drawing.Point(464, 96);
             this.GitClone.Name = "GitClone";
             this.GitClone.Size = new System.Drawing.Size(75, 23);
             this.GitClone.TabIndex = 2;
@@ -366,7 +377,7 @@
             // 
             this.ClientDetector.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ClientDetector.AutoSize = true;
-            this.ClientDetector.Location = new System.Drawing.Point(545, 103);
+            this.ClientDetector.Location = new System.Drawing.Point(545, 99);
             this.ClientDetector.Name = "ClientDetector";
             this.ClientDetector.Size = new System.Drawing.Size(43, 16);
             this.ClientDetector.TabIndex = 1;
@@ -375,7 +386,7 @@
             // RepoLink
             // 
             this.RepoLink.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.RepoLink.Location = new System.Drawing.Point(211, 100);
+            this.RepoLink.Location = new System.Drawing.Point(211, 96);
             this.RepoLink.Name = "RepoLink";
             this.RepoLink.Size = new System.Drawing.Size(247, 22);
             this.RepoLink.TabIndex = 0;
@@ -418,6 +429,16 @@
             this.Logbox.TabIndex = 0;
             this.Logbox.Text = resources.GetString("Logbox.Text");
             this.Logbox.TextChanged += new System.EventHandler(this.Logbox_TextChanged);
+            // 
+            // OpenFolder
+            // 
+            this.OpenFolder.Location = new System.Drawing.Point(635, 96);
+            this.OpenFolder.Name = "OpenFolder";
+            this.OpenFolder.Size = new System.Drawing.Size(23, 23);
+            this.OpenFolder.TabIndex = 9;
+            this.OpenFolder.Text = "💾";
+            this.OpenFolder.UseVisualStyleBackColor = true;
+            this.OpenFolder.Click += new System.EventHandler(this.OpenFolder_Click);
             // 
             // Form1
             // 
@@ -475,6 +496,7 @@
         private System.Windows.Forms.ListBox InstalledPluginList;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox CustomPluginsPath;
+        private System.Windows.Forms.Button OpenFolder;
     }
 }
 

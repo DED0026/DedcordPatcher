@@ -15,6 +15,7 @@ namespace DedcordPatcher
         {
             InitializeComponent();
             boykisser();
+            OpenFolder.Visible = false;
             if (File.Exists("ClientRepoTempDedcord"))
             {
                 RepoLink.Text = File.ReadAllText("ClientRepoTempDedcord");
@@ -27,7 +28,7 @@ namespace DedcordPatcher
 
         StreamWriter cmd;
         Process process = new Process();
-        private void startprocess()
+        private void StartCommandListener()
         {
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardOutput = true;
@@ -46,7 +47,7 @@ namespace DedcordPatcher
             process.ErrorDataReceived -= output;
             process.CancelErrorRead();
             process.CancelOutputRead();
-            startprocess();
+            StartCommandListener();
         }
 
         private void output(object sender, DataReceivedEventArgs e)
@@ -56,16 +57,18 @@ namespace DedcordPatcher
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            await Task.Run(() => startprocess());
+            await Task.Run(() => StartCommandListener());
             updatechecks();
         }
 
         private void GitClone_Click(object sender, EventArgs e)
         {
             if (GitClone.Text != "Working..")
-                if (GitClone.Text == "Delete")
+                if (ClientDownloaded)
                 {
                     GitClone.Text = "Working..";
+                    try { Folderwatcher.Dispose(); }
+                    catch { }
                     cmd.WriteLine("rd /s /q \"" + ClientFolder + "\"");
                     updatechecks();
                 }
@@ -88,7 +91,8 @@ namespace DedcordPatcher
                 ClientDownloaded = Directory.Exists(ClientFolder);
                 ClientDetector.Text = ClientDownloaded ? "Client: Found" : "Client: Not found";
                 GitClone.Text = ClientDownloaded ? "Delete" : "Git clone";
-
+                OpenFolder.Visible = ClientDownloaded;
+                TabChangeChecks();
             });
         }
 
@@ -131,8 +135,9 @@ namespace DedcordPatcher
             FetchPluh();
         }
 
-        string[] namelist;
-        string[] downloadlist;
+        string[] NameList;
+        string[] DownloadList;
+        string[] FormatList;
         bool respond;
         WebClient Wc = new WebClient();
         private void FetchPluh()
@@ -148,41 +153,77 @@ namespace DedcordPatcher
 
             string RawPluginString = Wc.DownloadString(Pluginlistlink.Text).Replace("Âµ", "µ");
             string[] RawPluginList = RawPluginString.Split('\n');
-            namelist = RawPluginList[0].Split('µ');
-            downloadlist = RawPluginList[1].Split('µ');
+            NameList = RawPluginList[0].Split('µ');
+            DownloadList = RawPluginList[1].Split('µ');
+            FormatList = RawPluginList[2].Split('µ');
 
             PluginList.Items.Clear();
             respond = false;
-            foreach (string plugin in namelist)
+            foreach (string plugin in NameList)
             {
                 PluginList.Items.Add(plugin);
-                string download = downloadlist[PluginList.Items.Count - 1];
-                string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
-
-                if (Directory.Exists(ClientFolder + CustomPluginsPath.Text + "\\" + foldername))
+                string download = DownloadList[PluginList.Items.Count - 1];
+                string PluginName = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
+                //GithubPluginToggling
+                if (Directory.Exists(ClientFolder + CustomPluginsPath.Text + "\\" + PluginName))
                     PluginList.SetItemChecked(PluginList.Items.Count - 1, true);
+                //ScriptToggling
+                else if (File.Exists(ClientFolder + CustomPluginsPath.Text + "\\" + PluginName))
+                    PluginList.SetItemChecked(PluginList.Items.Count - 1, true);
+
             }
             respond = true;
         }
 
+
+
+
+
         private void PluginList_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (!respond)
-            {
                 return;
-            }
 
-            string download = downloadlist[PluginList.SelectedIndex];
-            string foldername = Functions.GetLastDirectoryName(download.Replace('/', Path.DirectorySeparatorChar));
-            if (e.NewValue == CheckState.Checked)
+            bool InstallMode = e.NewValue == CheckState.Checked;
+            int PluginIndex = PluginList.SelectedIndex;
+
+            switch (FormatList[PluginIndex].ToLower())
+            {
+                case "github":
+                    GithubPlugininstall(InstallMode, DownloadList[PluginIndex]);
+                    break;
+                case "script":
+                    ScriptInstall(InstallMode, DownloadList[PluginIndex]);
+                    break;
+                default:
+                    MessageBox.Show("Format Not Found.");
+                    break;
+            }
+        }
+
+        void ScriptInstall(bool InstallOrUninstall, string Link)
+        {
+            string FileName = Functions.GetLastDirectoryName(Link.Replace('/', Path.DirectorySeparatorChar));
+            string FileLocation = ClientFolder + CustomPluginsPath.Text + "\\" + FileName;
+
+            if (InstallOrUninstall)
+                Wc.DownloadFile(Link, FileLocation);
+            else
+                File.Delete(FileLocation);
+        }
+
+        void GithubPlugininstall(bool InstallOrUninstall, string Link)
+        {
+            if (InstallOrUninstall)
             {
                 cmd.WriteLine("cd " + ClientFolder + CustomPluginsPath.Text);
-                cmd.WriteLine("git clone " + download);
+                cmd.WriteLine("git clone " + Link);
             }
             else
             {
+                string FolderName = Functions.GetLastDirectoryName(Link.Replace('/', Path.DirectorySeparatorChar));
                 cmd.WriteLine("cd " + ClientFolder + CustomPluginsPath.Text);
-                cmd.WriteLine("rd /s /q \"" + ClientFolder + CustomPluginsPath.Text + "\\" + foldername + "\"");
+                cmd.WriteLine("rd /s /q \"" + ClientFolder + CustomPluginsPath.Text + "\\" + FolderName + "\"");
             }
         }
 
@@ -226,12 +267,13 @@ namespace DedcordPatcher
 
             Folderwatcher = new FileSystemWatcher(LookPath, "*.*")
             {
-                NotifyFilter = NotifyFilters.Attributes
-                                 | NotifyFilters.CreationTime
+                NotifyFilter = NotifyFilters.CreationTime
+                                 | NotifyFilters.Attributes
                                  | NotifyFilters.DirectoryName
                                  | NotifyFilters.FileName
                                  | NotifyFilters.Security
-                                 | NotifyFilters.Size,
+                                 //| NotifyFilters.Size
+                                 ,
                 EnableRaisingEvents = true
             };
 
@@ -247,11 +289,22 @@ namespace DedcordPatcher
                 InstalledPluginList.Items.Add(file.Remove(0, LookPath.Length).Trim('\\'));
             foreach (string directory in Directory.GetDirectories(LookPath))
                 InstalledPluginList.Items.Add(directory.Remove(0, LookPath.Length).Trim('\\'));
+            if(InstalledPluginList.Items.Count == 1)
+                InstalledPluginList.Items.Add(@"\\\\\ This directory is empty /////");
         }
 
 
         private void AppTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
+            updatechecks();
+            TabChangeChecks();
+        }
+
+        void TabChangeChecks()
+        {
+            InstalledPluginList.Items.Clear();
+            if (!ClientDownloaded)
+                PluginList.Items.Clear();
             if (AppTabs.SelectedIndex == 1)
             {
                 if (ClientDownloaded)
@@ -262,10 +315,15 @@ namespace DedcordPatcher
                         reload();
                         Clickable = true;
                     }
+                    else
+                    {
+                        InstalledPluginList.Items.Add("Client installed but plugins folder doesnt exist, please refetch.");
+                        Clickable = false;
+                    }
                 }
                 else
                 {
-                    InstalledPluginList.Items.Add("Not installed.");
+                    InstalledPluginList.Items.Add("Client not installed.");
                     Clickable = false;
                 }
             }
@@ -280,7 +338,7 @@ namespace DedcordPatcher
         bool Clickable;
         private void InstalledPluginList_DoubleClick(object sender, EventArgs e)
         {
-            if (InstalledPluginList.SelectedIndex == -1 || !Clickable)
+            if (InstalledPluginList.SelectedIndex == -1 || !Clickable || (string)InstalledPluginList.SelectedItem == @"\\\\\ This directory is empty /////")
                 return;
 
             if (InstalledPluginList.SelectedIndex == LastIndex)
@@ -299,6 +357,11 @@ namespace DedcordPatcher
                     Process.Start(Launchedprocess);
                 }
             }
+        }
+
+        private void OpenFolder_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer", ClientFolder);
         }
     }
 
